@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Mykhaylo Kolesnik
+  description: ELK stack installation role.
+  license: MIT
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: Ubuntu
+      versions:
+      - xenial
+
+  galaxy_tags:
+    - server
+    - elasticsearch
+    - logstash
+    - kibana
+    - ELK

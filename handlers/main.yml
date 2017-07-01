@@ -1,0 +1,5 @@
+---
+- name: change hostname
+  hostname: 
+    name: "{{ elk_server_name }}"
+  failed_when: false

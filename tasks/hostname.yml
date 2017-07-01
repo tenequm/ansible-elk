@@ -1,0 +1,14 @@
+---
+- name: Installing 'dbus' package to change hostname.
+  apt:
+    name: dbus
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Adding server name in 'hosts' file.
+  become: yes
+  lineinfile:
+    dest: /etc/hostname
+    line: "{{ elk_server_name }}"
+    unsafe_writes: yes
+  notify: change hostname
