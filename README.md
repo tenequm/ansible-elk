@@ -1,5 +1,6 @@
 Ansible Role: ELK
 =========
+[![Build Status](https://travis-ci.org/tenequm/ansible-elk.svg?branch=master)](https://travis-ci.org/tenequm/ansible-elk)
 
 A role for ELK stack installation.
 
