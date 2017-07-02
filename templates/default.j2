@@ -2,9 +2,9 @@ server {
     server_name {{ elk_server_domain }};
     listen {{ elk_server_domain }}:443 ssl default_server;
 
-    ssl_certificate /etc/letsencrypt/live/www.{{ elk_server_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/www.{{ elk_server_domain }}/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/www.{{ elk_server_domain }}/chain.pem;
+    ssl_certificate /etc/letsencrypt/live/{{ elk_server_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ elk_server_domain }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ elk_server_domain }}/chain.pem;
     ssl_stapling on;
     ssl_stapling_verify on;
     resolver 8.8.8.8;
