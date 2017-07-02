@@ -57,3 +57,4 @@
   command: curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json 
   args:
     chdir: ~/
+    creates: ~/filebeat-index-template.json

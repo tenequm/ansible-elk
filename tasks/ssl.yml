@@ -20,9 +20,9 @@
     src: default-cert.j2
     dest: /etc/nginx/sites-available/default
 
-# - name: Restarting Nginx.
-#   service: name=nginx state=restarted
+- name: Restarting Nginx.
+  service: name=nginx state=restarted
 
-# - name: Receiving LetsEncrypt certificates.
-#   command: >
-#     certbot certonly --agree-tos -n -m {{ elk_ssl_email }} -d www.{{ elk_server_domain }} 
+- name: Receiving LetsEncrypt certificates.
+  command: >
+    certbot certonly --agree-tos -n -m {{ elk_ssl_email }} -d www.{{ elk_server_domain }} 
