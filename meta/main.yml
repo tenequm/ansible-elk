@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Mykhaylo Kolesnik
   description: ELK stack installation role.
@@ -16,3 +17,14 @@ galaxy_info:
     - logstash
     - kibana
     - ELK
+dependencies:
+  - tenequm.nginx
+  - role: tenequm.firewall
+    firewall_allowed_tcp_ports:
+      - 22
+      - 80
+      - 443
+      - 5044
+    firewall_additional_rules:
+      - "iptables -A INPUT -p tcp -m tcp --dport 5601 -s localhost -j ACCEPT"
+      - "iptables -A INPUT -p tcp -m tcp --dport 9200 -s localhost -j ACCEPT"

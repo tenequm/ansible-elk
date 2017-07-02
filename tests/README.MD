@@ -12,4 +12,3 @@ If you don't want the container to be automatically deleted after the test playb
 
 ## Reference
 This style of testing was taken from the [Jeff Geerling's](https://github.com/geerlingguy) repositories.
-

@@ -1,3 +1,6 @@
 ---
 # defaults file for elk
 elk_server_name: 'elk-server'
+elk_ssl_email: 'admin@example.com'
+elk_kibana_users:
+  - { name: 'admin', pass: 'admin' }

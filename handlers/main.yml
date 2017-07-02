@@ -1,5 +1,8 @@
 ---
 - name: change hostname
   hostname: 
-    name: "{{ elk_server_name }}"
+    name: "{{ elk_server_domain|d(false) or elk_server_name }}"
   failed_when: false
+  
+- name: restart logstash
+  service: name=logstash state=restarted

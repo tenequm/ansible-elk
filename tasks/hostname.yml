@@ -5,10 +5,14 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Adding server name in 'hosts' file.
-  become: yes
-  lineinfile:
+- name: Changing 'hostname'.
+  template:
     dest: /etc/hostname
-    line: "{{ elk_server_name }}"
-    unsafe_writes: yes
+    src: hostname.j2
   notify: change hostname
+
+- name: Adding 'hostname' in hosts file.
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ ansible_default_ipv4.address }} {{ elk_server_name  + ' ' + elk_server_domain|d(none)}}"
+    unsafe_writes: yes

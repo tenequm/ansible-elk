@@ -1,80 +1,11 @@
 ---
-- name: Creating directory for ELK stack files.
-  file:
-    path: ~/ELK/releases
-    state: directory
+- name: Checking if certificates where already created.
+  stat: path="/etc/letsencrypt/live/www.{{ elk_server_domain }}"
+  register: cert
 
 - include: hostname.yml
-
-- name: Installing 'apt-transport-https' package.
-  apt:
-    name: apt-transport-https
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: Adding key for ELK repository.
-  apt_key:
-    keyserver: pgp.mit.edu
-    id: D88E42B4
-
-- name: Adding ELK APT repository.
-  apt_repository:
-    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
-
-- name: Adding repository for JAVA 8 installation.
-  apt_repository:
-    repo: 'ppa:webupd8team/java'
-
-- name: Accepting JAVA 8 License.
-  debconf:
-    name: oracle-java8-installer
-    question: 'shared/accepted-oracle-license-v1-1'
-    value: 'true'
-    vtype: 'select'
-
-- name: Installing JAVA 8.
-  apt:
-    name: "{{ item }}"
-    update_cache: yes
-    cache_valid_time: 3600
-  with_items:
-    - oracle-java8-installer
-    - ca-certificates
-    - oracle-java8-set-default
-
-- name: Installing ELK packages.
-  apt:
-    name: "{{ item }}"
-    update_cache: yes
-    cache_valid_time: 3600
-  with_items:
-    - elasticsearch
-    - logstash
-    - kibana
-
-- name: Editing 'cluster'/'node' name config.
-  lineinfile:
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    dest: /etc/elasticsearch/elasticsearch.yml
-  with_items:
-    - { regexp: '^#?cluster\.name', line: 'cluster.name: {{ elk_server_name  }}' }
-    - { regexp: '^#?node\.name', line: 'node.name: {{ elk_server_name }}' }
-
-- name: Creating input/output files for Logstash.
-  template:
-    src: "{{ item }}.j2"
-    dest: "/etc/logstash/conf.d/{{ item }}"
-  with_items:
-    - 'input-beats.conf'
-    - 'output-elasticsearch.conf'
-
-- name: Enabling ELK packages.
-  service:
-    name: "{{ item }}"
-    enabled: yes
-    state: started
-  with_items:
-    - elasticsearch
-    - logstash
-    - kibana
+- include: ssl.yml
+  when: not cert.stat.exists
+- include: install.yml
+- include: configs.yml
+  tags: config

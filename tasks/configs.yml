@@ -1,0 +1,59 @@
+---
+- name: Editing 'cluster'/'node' names and network.host.
+  lineinfile:
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    dest: /etc/elasticsearch/elasticsearch.yml
+  with_items:
+    - { regexp: '^#?cluster\.name:', line: 'cluster.name: {{ elk_server_name  }}' }
+    - { regexp: '^#?node\.name:', line: 'node.name: {{ elk_server_name }}' }
+    - { regexp: '^#?network\.host:', line: 'network.host: localhost' }
+
+- name: Creating input/output files for Logstash.
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+  notify: restart logstash
+  with_items:
+    - '02-beats-input.conf'
+    - '10-syslog-filter.conf'
+    - '30-elasticsearch-output.conf'
+
+- name: Adding users allowed to access Kibana.
+  htpasswd:
+    create: yes
+    name: "{{ item.name }}"
+    password: "{{ item.pass }}"
+    path: /etc/nginx/htpasswd.users
+  notify: restart nginx
+  with_items:
+    - "{{ elk_kibana_users }}"
+
+- name: Adding configuration file for Nginx.
+  template:
+    src: default.j2    
+    dest: /etc/nginx/sites-available/default
+  notify: restart nginx
+
+- name: Loading sample Kibana Dashboards.
+  unarchive:
+    src: https://download.elastic.co/beats/dashboards/beats-dashboards-1.2.2.zip
+    dest: ~/ELK
+    remote_src: yes
+  register: sample_boards
+
+- name: Loading sample boards into ES.
+  command: ./load.sh
+  args:
+    chdir: ~/ELK/beats-dashboards-1.2.2
+  when: sample_boards.changed
+
+- name: Loading Filebeat index template.
+  get_url:
+    url: https://gist.githubusercontent.com/thisismitch/3429023e8438cc25b86c/raw/d8c479e2a1adcea8b1fe86570e42abab0f10f364/filebeat-index-template.json
+    dest: ~/filebeat-index-template.json
+
+- name: Loading Filebeat template into ES.
+  command: curl -XPUT 'http://localhost:9200/_template/filebeat?pretty' -d@filebeat-index-template.json 
+  args:
+    chdir: ~/
