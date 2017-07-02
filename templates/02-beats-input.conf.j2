@@ -2,7 +2,7 @@ input {
       beats {
         port => {{ elk_ls_input_port|d('5044') }}
         ssl => true
-        ssl_certificate => "/etc/letsencrypt/live/{{ elk_server_domain }}/cert.pem"
-        ssl_key => "/etc/letsencrypt/live/{{ elk_server_domain }}/privkey.pem"
+        ssl_certificate => "/etc/letsencrypt/live/www.{{ elk_server_domain }}/cert.pem"
+        ssl_key => "/etc/letsencrypt/live/www.{{ elk_server_domain }}/privkey.pem"
       }
 }
