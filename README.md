@@ -1,22 +1,21 @@
 Ansible Role: ELK
 =========
 
-A role for ELK stack installation.
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+A role for ELK stack installation on Nginx server. Watch out that it was supposed to be used for the newly created machines, so using it over some existing can cause damage to it. Also it establishes SSL certificates and connects them to Nginx server.
 
 Role Variables
 --------------
+*REQUIRED VARIABLES*
+`elk_server_domain: ''` - domain name of the server you're going to provide it on, as it will also establish automated SSL certificates from Letsencrypt.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+*OTHER VARIABLE*
+`elk_ssl_email: ''` - email which your certificates will be registered to.
+`elk_kibana_users: []` - list of users who will have access to Kibana panel.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+It dependence on `tenequm.nginx` role, so be sure you have it installed before running this role.
 
 Example Playbook
 ----------------
@@ -25,7 +24,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: tenequm.elk, elk_server_domain: "example.com" }
 
 License
 -------
