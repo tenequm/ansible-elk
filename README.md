@@ -1,7 +1,7 @@
 Ansible Role: ELK
 =========
 
-A role for ELK stack installation on Nginx server. Watch out that it was supposed to be used for the newly created machines, so using it over some existing can cause damage to it. Also it establishes SSL certificates and connects them to Nginx server.
+A role for ELK stack installation on Nginx server running on Ubuntu Xenial (it is not tested with other distros). Watch out that it was supposed to be used for the newly created machines, so using it over some existing can cause damage to it. Also it establishes SSL certificates and connects them to Nginx server. Also it configures firewall, so only important ports will be opened.
 
 Role Variables
 --------------
